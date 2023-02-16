@@ -5,6 +5,7 @@ from util.Window import Window
 from util.Scenes import Scenes
 
 from clue.scene.Board import Board
+from clue.scene.Menu import Menu
 
 from clue.Game import Game
 
@@ -16,4 +17,5 @@ class Clue(Game):
         Window.resize(Settings.get("WINDOW SIZE"))
 
         Scenes.add_scene(Board())
-        Scenes.set_scene("BOARD")
+        Scenes.add_scene(Menu())
+        Scenes.set_scene("MENU")

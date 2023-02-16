@@ -1,6 +1,9 @@
 import json
+import random
 
 from util.Settings import Settings
+from util.Input import Input
+from util.Scenes import Scenes
 from clue.scene.Scene import Scene
 import pygame as p
 
@@ -10,6 +13,7 @@ class Board(Scene):
         super().__init__("BOARD")
         self.board = [[]]
         self.TILE_SIZE = 0
+        self.players = []
 
     def awake(self):
         with open("assets/board/board.json", "r") as file:
@@ -18,11 +22,15 @@ class Board(Scene):
         self.TILE_SIZE = Settings.get("TILE SIZE")
 
     def update(self):
-        pass
+        if Input.get_key_down(p.K_SPACE):
+            print(random.randint(1, 6))
+
+        if Input.get_key_down(p.K_ESCAPE):
+            Scenes.set_scene("MENU")
 
     def get_surface(self):
         surf = p.Surface((Settings.get("RESOLUTION")))
-        surf.fill((255, 255, 255))
+        surf.fill((0, 0, 0))
 
         y = 0
         for row in self.board:
