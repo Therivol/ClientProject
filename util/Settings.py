@@ -27,7 +27,3 @@ class Settings:
         # Save the settings to the JSON file
         with open(Settings.file_path, "w") as f:
             json.dump(Settings.settings, f, indent=4)
-
-    @property
-    def RESOLUTION(self):
-        Settings.get("RESOLUTION")

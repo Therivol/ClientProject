@@ -3,7 +3,7 @@ from util.Time import Time
 from util.Input import Input
 from util.Settings import Settings
 from util.Scenes import Scenes
-from util.Assets import Assets
+from util.Globals import Globals
 from util.Window import Window
 import pygame as p
 
@@ -13,6 +13,8 @@ class Game:
         p.init()
         Time.awake()
         Settings.load()
+        Globals.awake()
+        Window.awake()
 
         self.should_close = False
 
@@ -27,16 +29,11 @@ class Game:
             if ev.type == p.QUIT or Window.should_close:
                 self.should_close = True
 
-            # if ev.type == p.VIDEORESIZE:
-                # Window.resize((ev.w, ev.h))
+            if ev.type == p.VIDEORESIZE:
+                Window.resize((ev.w, ev.h))
 
-        # if Input.get_key_down(p.K_F11):
-            # Window.full_screen = not Window.full_screen
-            # if Window.full_screen:
-                # Window.display = p.display.set_mode(Window.monitor_size(), p.FULLSCREEN)
-                # Window.resize(Window.monitor_size())
-            # else:
-                # Window.display = p.display.set_mode(Settings.get("WINDOW SIZE"), p.RESIZABLE)
+        if Input.get_key_down(p.K_F11):
+            Window.toggle_full_screen()
 
     @staticmethod
     def start_frame():

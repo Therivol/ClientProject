@@ -1,6 +1,6 @@
 import pygame as p
 from util.Window import Window
-from util.Settings import Settings
+from util.Globals import Globals
 
 
 class Input:
@@ -103,7 +103,7 @@ class Input:
 
     @staticmethod
     def get_mouse_pos():
-        res_x, res_y = Settings.get("RESOLUTION")
+        res_x, res_y = Globals.resolution
         win_x = Window.view.get_width()
         win_y = Window.view.get_height()
         x, y = p.mouse.get_pos()

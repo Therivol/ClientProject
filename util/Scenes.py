@@ -1,7 +1,7 @@
 import pygame as p
 
 from util.Debug import Debug
-from util.Settings import Settings
+from util.Globals import Globals
 from clue.scene.Scene import Scene
 
 
@@ -51,6 +51,6 @@ class Scenes:
         elif Scenes.current_scene:
             return Scenes.current_scene.get_surface()
         else:
-            surf = p.Surface((Settings.get("RESOLUTION")))
+            surf = p.Surface(Globals.resolution)
             surf.fill((255, 0, 0))
             return surf

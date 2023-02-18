@@ -1,13 +1,12 @@
 {
     "TITLE": "Clue",
     "RESOLUTION": [
-        1000,
-        600
+        1024,
+        800
     ],
     "WINDOW SIZE": [
-        1000,
-        600
+        1024,
+        800
     ],
-    "ASPECT RATIO": 1.764705882,
     "TILE SIZE": 32
 }

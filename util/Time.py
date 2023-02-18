@@ -27,3 +27,7 @@ class Time:
     @staticmethod
     def elapsed():
         return (time.time_ns() - Time.time_started) / 1000000000
+
+    @staticmethod
+    def time_s():
+        return time.time_ns() / 1000000000
