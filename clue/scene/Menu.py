@@ -33,7 +33,6 @@ class Menu(Scene):
             Scenes.set_scene("ADD PLAYERS")
 
         if self.resume_button.update():
-            GameInstance.load_instance()
             Scenes.set_scene("BOARD")
 
         if self.quit_button.update():

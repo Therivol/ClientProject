@@ -1,8 +1,17 @@
 class ClueUtil:
-    characters = ["MISS SCARLET", "MRS PEACOCK", "MRS WHITE", "COLONEL MUSTARD", "MR GREEN", "PROFESSOR PLUM"]
-    weapons = ["REVOLVER", "KNIFE", "LEAD PIPE", "ROPE", "CANDLESTICK", "WRENCH"]
-    rooms = ["STUDY", "HALL", "LOUNGE", "LIBRARY", "DINING ROOM", "BILLIARD ROOM", "CONSERVATORY", "BALLROOM",
-             "KITCHEN"]
+
+    @staticmethod
+    def characters():
+        return ["MISS SCARLET", "MRS PEACOCK", "MRS WHITE", "COLONEL MUSTARD", "MR GREEN", "PROFESSOR PLUM"]
+
+    @staticmethod
+    def weapons():
+        return ["REVOLVER", "KNIFE", "LEAD PIPE", "ROPE", "CANDLESTICK", "WRENCH"]
+
+    @staticmethod
+    def rooms():
+        return ["STUDY", "HALL", "LOUNGE", "LIBRARY", "DINING ROOM", "BILLIARD ROOM", "CONSERVATORY", "BALLROOM",
+                "KITCHEN"]
 
     room_doors = {(6, 3): "STUDY", (9, 4): "HALL", (11, 6): "HALL", (12, 6): "HALL", (17, 5): "LOUNGE",
                   (6, 8): "LIBRARY", (3, 10): "LIBRARY", (17, 9): "DINING ROOM", (16, 12): "DINING ROOM",

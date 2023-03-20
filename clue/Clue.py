@@ -1,9 +1,6 @@
-import pygame as p
 
-from util.Settings import Settings
-from util.Window import Window
+from clue.scene.Guess import Guess
 from util.Scenes import Scenes
-from util.Globals import Globals
 
 from clue.scene.Board import Board
 from clue.scene.Menu import Menu
@@ -23,4 +20,5 @@ class Clue(Game):
         Scenes.add_scene(Popup())
         Scenes.add_scene(CreatePlayer())
         Scenes.add_scene(Pause())
+        Scenes.add_scene(Guess())
         Scenes.set_scene("MENU")

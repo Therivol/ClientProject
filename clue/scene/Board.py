@@ -1,6 +1,7 @@
 import json
 import random
 
+from clue.Player import Player
 from gui.element.Button import Button
 from util.Assets import Assets
 from util.ClueUtil import ClueUtil
@@ -11,9 +12,7 @@ from util.Scenes import Scenes
 from util.Globals import Globals
 from util.Time import Time
 from clue.scene.Scene import Scene
-from clue.Player import Player
 import pygame as p
-import pygame.gfxdraw
 
 
 class Board(Scene):
@@ -21,48 +20,64 @@ class Board(Scene):
         super().__init__("BOARD")
         self.board = [[]]
         self.TILE_SIZE = 0
-        self.players = []
         self.tokens = []
+        self.players = []
         self.rolling = False
         self.roll_start = 0
         self.die_roll = 0
+
+        self.can_guess = False
+        self.moved = False
 
         self.turn = 0
         self.start_positions = [(0, 18), (0, 5), (16, 0), (23, 7), (14, 24), (9, 24)]
 
         self.roll_button = Button(p.Rect(800, 352, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174),
                                   disable_color=(0, 0, 0))
-        self.info_button = Button(p.Rect(800, 480, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
+        self.guess_button = Button(p.Rect(800, 480, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174),
+                                   disable_color=(0, 0, 0))
         self.options_button = Button(p.Rect(800, 576, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
         self.end_button = Button(p.Rect(800, 704, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
 
         self.available_moves = []
 
     def enter(self):
-        self.players = [player for player in GameInstance.players if player]
-        self.turn = GameInstance.game_turn
+        if GameInstance.started:
+            GameInstance.load_instance(self)
 
-        if not GameInstance.started:
+        else:
             self.start_board()
 
     def exit(self):
-        GameInstance.save_instance()
+        GameInstance.save_instance(self)
 
     def start_board(self):
-        # self.guess_button.set_disabled(True)
+        self.guess_button.set_disabled(True)
+
+        player_tokens = {player.token: player for player in GameInstance.players if player}
+        for token in ClueUtil.characters():
+            if token in player_tokens:
+                self.tokens.append(player_tokens[token])
+            else:
+                self.tokens.append(Player(token=token))
+
+        self.players = [self.tokens.index(player_tokens[token]) for token in player_tokens]
+
+        self.turn = 0
+        self.die_roll = 0
+        self.moved = False
 
         i = 0
-        for player in self.players:
-            if player:
-                new_pos = self.start_positions[i]
-                i += 1
+        for token in self.tokens:
+            new_pos = self.start_positions[i]
+            i += 1
 
-                player.set_location(new_pos)
+            token.set_location(new_pos)
 
         GameInstance.started = True
 
     def next_turn(self):
-        # self.guess_button.set_disabled(True)
+        self.guess_button.set_disabled(True)
 
         self.turn = (self.turn + 1) % len(self.players)
         self.roll_button.set_disabled(False)
@@ -76,7 +91,8 @@ class Board(Scene):
 
         moves = []
 
-        player = self.players[self.turn]
+        player = self.tokens[self.players[self.turn]]
+
         if player.room != "":
             if player.room in ClueUtil.tunnels:
                 print(ClueUtil.tunnels[player.room])
@@ -106,7 +122,7 @@ class Board(Scene):
         for direction in directions:
             new_pos = pos + direction
             tile = self.board[int(new_pos.y)][int(new_pos.x)]
-            if (tile == 2 or tile == 3) and new_pos not in player_pos:
+            if tile in [2, 3] and new_pos not in player_pos:
                 discovered.append(new_pos)
 
         new_discovered = []
@@ -134,17 +150,17 @@ class Board(Scene):
         if self.roll_button.update():
             self.roll_die()
 
-        if self.info_button.update():
-            Scenes.set_scene("PAUSE")
+        if self.guess_button.update():
+            Scenes.set_scene("GUESS")
 
         if self.end_button.update():
             self.next_turn()
 
-        if self.rolling:
-            if Time.time_s() - self.roll_start > 0.5:
-                self.rolling = False
-                self.die_roll = random.randint(1, 6)
-                self.set_moves()
+        if self.rolling and Time.time_s() - self.roll_start > 0.5:
+            self.rolling = False
+            self.die_roll = random.randint(1, 6)
+            GameInstance.die_roll = self.die_roll
+            self.set_moves()
 
         if Input.get_key_down(p.K_ESCAPE) or self.options_button.update():
             Scenes.set_scene("PAUSE")
@@ -160,7 +176,7 @@ class Board(Scene):
                 self.move_player(p.Vector2(x, y))
 
     def move_player(self, pos):
-        new_room = False
+        self.moved = True
 
         player = self.players[self.turn]
         pos_xy = (pos.x, pos.y)
@@ -171,7 +187,6 @@ class Board(Scene):
             self.add_to_room(ClueUtil.tunnels_2[pos_xy], player)
 
         else:
-            new_room = True
             player.room = ""
             player.set_location(pos)
 
@@ -189,6 +204,8 @@ class Board(Scene):
             pos = (random.randint(o_pos[0] - 1, o_pos[0] + 1), random.randint(o_pos[1], o_pos[1] + 1))
 
         player.set_location(pos)
+
+        self.guess_button.set_disabled(False)
 
     def roll_die(self):
         self.roll_button.set_disabled(True)
@@ -214,7 +231,7 @@ class Board(Scene):
         surf.blit(Assets.get_image(f"dice/{self.die_roll}.png"), (832, 192))
 
         self.roll_button.draw(surf)
-        self.info_button.draw(surf)
+        self.guess_button.draw(surf)
         self.options_button.draw(surf)
         self.end_button.draw(surf)
 
@@ -222,10 +239,8 @@ class Board(Scene):
         surf.blit(Assets.get_image("board/board.png"), (0, 0))
 
     def draw_players(self, surf):
-        for player in self.players:
-            if player.room != "":
-                pass
-
+        for index in self.players:
+            player = self.tokens[index]
             surf.blit(Assets.get_image(f"tokens/{player.token}.png", alpha=True), player.location * self.TILE_SIZE)
 
     def draw_moves(self, surf):

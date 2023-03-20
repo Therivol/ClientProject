@@ -39,7 +39,7 @@ class AddPlayers(Scene):
         players = [None, None, None, None, None, None]
 
         i = 0
-        for player in GameInstance.players:
+        for player in self.players:
             if player and player is not to_remove:
                 players[i] = player
                 i += 1
@@ -47,7 +47,7 @@ class AddPlayers(Scene):
         self.players = players
 
     def num_players(self):
-        return len([player for player in self.players if player is not None])
+        return len([player for player in self.players if player])
 
     def awake(self):
         x, y = 0, 32
@@ -73,12 +73,11 @@ class AddPlayers(Scene):
         if self.back_button.update():
             Scenes.set_scene("MENU")
 
-        if self.selected >= 0:
-            if self.remove_button.update():
-                self.remove_player(self.players[self.selected])
-                self.selected = -1
+        if self.selected >= 0 and self.remove_button.update():
+            self.remove_player(self.players[self.selected])
+            self.selected = -1
 
-        if self.num_players() >= 3 and self.next_button.update():
+        if self.num_players() >= 3 and (self.next_button.update() or Input.get_key_down(p.K_RETURN)):
             GameInstance.new_instance()
             GameInstance.players = self.players
             Scenes.set_scene("BOARD")
@@ -110,6 +109,15 @@ class AddPlayers(Scene):
                 pos = pos[0] + button.rect.left, pos[1] + button.rect.top
                 surf.blit(add_img, pos)
                 break
+
+        x, y = 0, 32
+        for i in range(6):
+            x = (i % 3) * 256 + 128
+            if i > 2:
+                y = 354
+
+            if self.players[i]:
+                surf.blit(p.transform.scale(Assets.get_image(f"tokens/{self.players[i].token}.png"), (128, 128)), (x, y))
 
         if self.selected >= 0:
             self.remove_button.draw(surf)

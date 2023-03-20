@@ -11,9 +11,9 @@ from util.Input import Input
 from util.Scenes import Scenes
 
 
-class CreatePlayer(Scene):
+class Guess(Scene):
     def __init__(self):
-        super().__init__("CREATE PLAYER")
+        super().__init__("GUESS")
 
         self.shadow = None
 
@@ -30,15 +30,7 @@ class CreatePlayer(Scene):
 
     def enter(self):
         self.token_select = 0
-        players = Scenes.get_scene("ADD PLAYERS").players
-
         self.tokens = ClueUtil.characters()
-        for player in players:
-            if player and player.token in self.tokens:
-                self.tokens.remove(player.token)
-
-        self.next_button.set_disabled(True)
-        self.player = Player("1", (0, 0), "MISS SCARLET")
 
     def awake(self):
         self.shadow = p.Surface((292, 284))
@@ -47,12 +39,11 @@ class CreatePlayer(Scene):
 
     def update(self):
         if Input.get_key_down(p.K_ESCAPE) or self.back_button.update():
-            Scenes.set_scene("ADD PLAYERS")
+            Scenes.set_scene("BOARD")
 
         if self.next_button.update() or Input.get_key_down(p.K_RETURN):
             self.player.token = self.tokens[self.token_select]
-            Scenes.set_scene("ADD PLAYERS")
-            Scenes.get_scene("ADD PLAYERS").add_player(self.player)
+            Scenes.set_scene("BOARD")
 
         if self.right_button.update() or Input.get_key_down(p.K_RIGHT):
             self.token_select += 1
