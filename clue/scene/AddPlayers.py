@@ -1,21 +1,19 @@
-import json
-
 from gui.element.Button import Button
 from gui.element.Select import Select
 from util.Assets import Assets
 from util.GameInstance import GameInstance
-from util.Settings import Settings
 from util.Input import Input
 from util.Scenes import Scenes
 from util.Globals import Globals
 from clue.scene.Scene import Scene
-from clue.Player import Player
 import pygame as p
 
 
 class AddPlayers(Scene):
     def __init__(self):
         super().__init__("ADD PLAYERS")
+
+        self.players = [None for _ in range(6)]
 
         self.buttons = []
         self.selects = []
@@ -29,6 +27,27 @@ class AddPlayers(Scene):
                                   active_border=(174, 174, 174))
 
         self.selected = -1
+
+    def clear(self):
+        self.players = [None for _ in range(6)]
+
+    def add_player(self, player):
+        i = self.players.index(None)
+        self.players[i] = player
+
+    def remove_player(self, to_remove):
+        players = [None, None, None, None, None, None]
+
+        i = 0
+        for player in GameInstance.players:
+            if player and player is not to_remove:
+                players[i] = player
+                i += 1
+
+        self.players = players
+
+    def num_players(self):
+        return len([player for player in self.players if player is not None])
 
     def awake(self):
         x, y = 0, 32
@@ -48,20 +67,25 @@ class AddPlayers(Scene):
         if Input.get_key_down(p.K_SPACE):
             self.back_button.toggle_disabled()
 
+        if Input.get_key_down(p.K_ESCAPE):
+            Scenes.set_scene("MENU")
+
         if self.back_button.update():
             Scenes.set_scene("MENU")
 
         if self.selected >= 0:
             if self.remove_button.update():
-                GameInstance.remove_player(GameInstance.players[self.selected])
+                self.remove_player(self.players[self.selected])
                 self.selected = -1
 
-        if GameInstance.num_players() >= 3 and self.next_button.update():
+        if self.num_players() >= 3 and self.next_button.update():
+            GameInstance.new_instance()
+            GameInstance.players = self.players
             Scenes.set_scene("BOARD")
 
         self.selected = -1
         for i in range(6):
-            if GameInstance.players[i]:
+            if self.players[i]:
                 if self.selects[i].update():
                     self.selected = i
             else:
@@ -76,7 +100,7 @@ class AddPlayers(Scene):
 
         add_img = Assets.get_image("ui/plus.png", alpha=True)
         for i in range(6):
-            if GameInstance.players[i]:
+            if self.players[i]:
                 select = self.selects[i]
                 select.draw(surf)
             else:
@@ -90,7 +114,7 @@ class AddPlayers(Scene):
         if self.selected >= 0:
             self.remove_button.draw(surf)
 
-        if GameInstance.num_players() >= 3:
+        if self.num_players() >= 3:
             self.next_button.draw(surf)
 
         self.back_button.draw(surf)

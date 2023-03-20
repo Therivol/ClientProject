@@ -45,6 +45,9 @@ class Board(Scene):
         if not GameInstance.started:
             self.start_board()
 
+    def exit(self):
+        GameInstance.save_instance()
+
     def start_board(self):
         # self.guess_button.set_disabled(True)
 
@@ -55,6 +58,8 @@ class Board(Scene):
                 i += 1
 
                 player.set_location(new_pos)
+
+        GameInstance.started = True
 
     def next_turn(self):
         # self.guess_button.set_disabled(True)

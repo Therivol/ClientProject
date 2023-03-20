@@ -5,7 +5,7 @@ from clue.scene.Scene import Scene
 from gui.element.Button import Button
 from gui.element.Select import Select
 from util.Assets import Assets
-from util.GameInstance import GameInstance
+from util.ClueUtil import ClueUtil
 from util.Globals import Globals
 from util.Input import Input
 from util.Scenes import Scenes
@@ -17,45 +17,65 @@ class CreatePlayer(Scene):
 
         self.shadow = None
 
-        self.back_button = Button(p.Rect(64, 672, 192, 64), (0, 0, 0), (50, 50, 50))
-        self.next_button = Button(p.Rect(768, 672, 192, 64), (0, 0, 0), (50, 50, 50))
+        self.back_button = Button(p.Rect(64, 672, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
+        self.next_button = Button(p.Rect(768, 672, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174),
+                                  disable_color=(0, 0, 0))
 
         self.token_buttons = []
 
-        self.character_select = None
+        self.token_select = None
         self.player = None
 
     def enter(self):
-        self.player = Player("1", (0, 0), "MISS SCARLET")
 
-        x = 48
-        for _ in range(6):
-            button = Select(p.Rect(x, 128, 128, 128), (0, 0, 0), (100, 100, 100), idle_border=(150, 150, 150),
-                            active_border=(150, 150, 150))
-            self.token_buttons.append(button)
-            x += 160
+        for button in self.token_buttons:
+            button.pressed = False
+
+        self.next_button.set_disabled(True)
+        self.token_select = None
+        self.player = Player("1", (0, 0), "MISS SCARLET")
 
     def awake(self):
         self.shadow = p.Surface((292, 284))
         self.shadow.fill((0, 0, 0))
         self.shadow.set_alpha(150)
 
+        x = 48
+        for _ in range(6):
+            button = Select(p.Rect(x, 128, 128, 128), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
+            self.token_buttons.append(button)
+            x += 160
+
     def update(self):
         if Input.get_key_down(p.K_ESCAPE) or self.back_button.update():
             Scenes.set_scene("ADD PLAYERS")
 
-        if self.character_select and self.next_button.update():
+        if self.next_button.update():
+            self.player.token = ClueUtil.characters[self.token_select]
+            print(self.player.token)
             Scenes.set_scene("ADD PLAYERS")
-            GameInstance.add_player(self.player)
+            Scenes.get_scene("ADD PLAYERS").add_player(self.player)
 
         for button in self.token_buttons:
             button.update()
 
-        self.character_select = None
         for i, button in enumerate(self.token_buttons):
-            if button.pressed:
-                self.character_select = i + 1
+            if button.pressed and self.token_select != i:
+                self.token_select = i
                 break
+
+        for i, button in enumerate(self.token_buttons):
+            if i != self.token_select:
+                button.pressed = False
+
+        for button in self.token_buttons:
+            if button.pressed:
+                break
+
+        else:
+            self.token_select = None
+
+        self.next_button.set_disabled(self.token_select is None)
 
     def get_surface(self):
         surf = p.Surface(Globals.resolution)
@@ -63,9 +83,7 @@ class CreatePlayer(Scene):
 
         self.back_button.draw(surf)
 
-
-        if self.character_select:
-            self.next_button.draw(surf)
+        self.next_button.draw(surf)
 
         for button in self.token_buttons:
             button.draw(surf)

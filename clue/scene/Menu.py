@@ -3,7 +3,6 @@ import json
 from util.Assets import Assets
 from util.GameInstance import GameInstance
 from util.Globals import Globals
-from util.Input import Input
 from util.Scenes import Scenes
 from clue.scene.Scene import Scene
 
@@ -30,7 +29,7 @@ class Menu(Scene):
 
     def update(self):
         if self.new_button.update():
-            GameInstance.new_instance()
+            Scenes.get_scene("ADD PLAYERS").clear()
             Scenes.set_scene("ADD PLAYERS")
 
         if self.resume_button.update():

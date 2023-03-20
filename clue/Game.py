@@ -17,6 +17,12 @@ class Game:
         Window.awake()
 
         self.should_close = False
+        self.frame_rate = -1
+        self.clock = p.time.Clock()
+
+    def set_frame_rate(self, frame_rate):
+        if frame_rate > 0:
+            self.frame_rate = frame_rate
 
     def start(self):
         pass
@@ -38,6 +44,10 @@ class Game:
     @staticmethod
     def start_frame():
         Time.start_frame()
+
+    def end_frame(self):
+        if self.frame_rate > 0:
+            self.clock.tick(self.frame_rate)
 
     @staticmethod
     def calculate_dt():

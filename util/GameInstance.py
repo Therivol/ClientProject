@@ -6,10 +6,12 @@ from clue.Player import Player
 class GameInstance:
     players = [None for _ in range(6)]
     started = False
-    game_turn = 1
+    game_turn = 0
 
     @staticmethod
     def load_instance():
+        print("loading")
+
         GameInstance.started = True
         with open("assets/save/save.json", 'r') as file:
             save = json.load(file)
@@ -24,6 +26,7 @@ class GameInstance:
 
     @staticmethod
     def save_instance():
+        print("saving")
         players = []
 
         for player in GameInstance.players:
@@ -42,24 +45,3 @@ class GameInstance:
     def new_instance():
         GameInstance.players = [None for _ in range(6)]
         GameInstance.started = False
-
-    @staticmethod
-    def add_player(player):
-        i = GameInstance.players.index(None)
-        GameInstance.players[i] = player
-
-    @staticmethod
-    def remove_player(to_remove):
-        players = [None, None, None, None, None, None]
-
-        i = 0
-        for player in GameInstance.players:
-            if player and player is not to_remove:
-                players[i] = player
-                i += 1
-
-        GameInstance.players = players
-
-    @staticmethod
-    def num_players():
-        return len([player for player in GameInstance.players if player is not None])
