@@ -18,10 +18,6 @@ class Input:
 
     raw_keys = []
 
-    keys_to_remove = []
-
-    buttons_to_remove = []
-
     mouse_dx, mouse_dy = 0, 0
 
     mouse_x, mouse_y = 0, 0
@@ -44,16 +40,6 @@ class Input:
 
     @staticmethod
     def update():
-
-        for button in Input.buttons_to_remove:
-            Input.mouse_down[button] = True
-
-        Input.buttons_to_remove.clear()
-
-        for key in Input.keys_to_remove:
-            Input.key_down[key] = True
-
-        Input.keys_to_remove.clear()
 
         # Update mouse position and mouse movement
         mouse_pos = p.mouse.get_pos()
@@ -100,7 +86,7 @@ class Input:
     def get_key_down(key):
         keys = p.key.get_pressed()
         if keys[key] and not Input.key_down[key]:
-            Input.keys_to_remove.append(key)
+            Input.key_down[key] = True
             return True
         elif not keys[key]:
             Input.key_down[key] = False
@@ -110,7 +96,7 @@ class Input:
     def get_button_down(button):
         mouse_buttons = p.mouse.get_pressed()
         if mouse_buttons[button] and not Input.mouse_down[button]:
-            Input.buttons_to_remove.append(button)
+            Input.mouse_down[button] = True
             return True
         elif not mouse_buttons[button]:
             Input.mouse_down[button] = False

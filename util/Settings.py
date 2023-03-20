@@ -1,5 +1,7 @@
 import json
 
+from util.GameInstance import GameInstance
+
 
 class Settings:
     file_path = "assets/settings/general.json"
@@ -27,3 +29,5 @@ class Settings:
         # Save the settings to the JSON file
         with open(Settings.file_path, "w") as f:
             json.dump(Settings.settings, f, indent=4)
+
+        GameInstance.save_instance()

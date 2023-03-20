@@ -11,6 +11,8 @@ class Scenes:
     # Current scene
     current_scene = None
 
+    last_scene = None
+
     @staticmethod
     def add_scene(scene):
         Scenes.scenes[scene.name] = scene
@@ -21,6 +23,7 @@ class Scenes:
     def set_scene(name):
         if Scenes.current_scene:
             Scenes.current_scene.exit()
+            Scenes.last_scene = Scenes.current_scene.name
         Scenes.current_scene = Scenes.scenes[name.upper()]
         Scenes.current_scene.enter()
         Debug.log(f"{name.upper()}")
