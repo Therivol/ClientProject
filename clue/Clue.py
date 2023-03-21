@@ -1,5 +1,8 @@
+import pygame as p
+
 from clue.scene.Cards import Cards
 from clue.scene.Guess import Guess
+from util.Assets import Assets
 from util.Scenes import Scenes
 
 from clue.scene.Board import Board
@@ -23,3 +26,5 @@ class Clue(Game):
         Scenes.add_scene(Guess())
         Scenes.add_scene(Cards())
         Scenes.set_scene("MENU")
+
+        p.display.set_icon(Assets.get_image("dice/1.png"))

@@ -22,11 +22,12 @@ class Board(Scene):
         self.TILE_SIZE = 0
         self.tokens = []
         self.players = []
+        self.player_cards = {}
+        self.accuse = []
         self.rolling = False
         self.roll_start = 0
         self.die_roll = 0
 
-        self.can_guess = False
         self.moved = False
 
         self.turn = 0
@@ -34,8 +35,7 @@ class Board(Scene):
 
         self.roll_button = Button(p.Rect(800, 352, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174),
                                   disable_color=(0, 0, 0))
-        self.guess_button = Button(p.Rect(800, 480, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174),
-                                   disable_color=(0, 0, 0))
+        self.guess_button = Button(p.Rect(800, 480, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
         self.options_button = Button(p.Rect(800, 576, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
         self.end_button = Button(p.Rect(800, 704, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
 
@@ -52,7 +52,6 @@ class Board(Scene):
         GameInstance.save_instance(self)
 
     def start_board(self):
-        self.guess_button.set_disabled(True)
         self.tokens = []
 
         player_tokens = {player.token: player for player in GameInstance.players if player}
@@ -63,6 +62,22 @@ class Board(Scene):
                 self.tokens.append(Player(token=token, player=False))
 
         self.players = [self.tokens.index(player_tokens[token]) for token in player_tokens]
+
+        self.accuse.append(ClueUtil.weapons()[random.randint(0, 5)])
+        self.accuse.append(ClueUtil.characters()[random.randint(0, 5)])
+        self.accuse.append(ClueUtil.rooms()[random.randint(0, 8)])
+
+        self.player_cards = {index: [] for index in self.players}
+
+        cards = ClueUtil.cards()
+        random.shuffle(cards)
+        player_counter = 0
+        for card in cards:
+            if card not in self.accuse:
+                self.player_cards[self.players[player_counter]].append(card)
+                player_counter = (player_counter + 1) % len(self.players)
+
+        print(self.accuse, self.player_cards)
 
         self.turn = 0
         self.die_roll = 0
@@ -81,7 +96,6 @@ class Board(Scene):
         GameInstance.started = True
 
     def next_turn(self):
-        self.guess_button.set_disabled(True)
 
         self.turn = (self.turn + 1) % len(self.players)
         self.roll_button.set_disabled(False)
@@ -156,7 +170,7 @@ class Board(Scene):
         if self.roll_button.update():
             self.roll_die()
 
-        if self.guess_button.update():
+        if  self.guess_button.update() and self.tokens[self.players[self.turn]].room != "":
             Scenes.get_scene("GUESS").set_room(self.tokens[self.players[self.turn]].room)
             Scenes.set_scene("GUESS")
 
@@ -214,8 +228,6 @@ class Board(Scene):
             pos = (random.randint(o_pos[0] - 1, o_pos[0] + 1), random.randint(o_pos[1], o_pos[1] + 1))
 
         to_add.set_location(pos)
-
-        self.guess_button.set_disabled(False)
 
     def roll_die(self):
         self.roll_button.set_disabled(True)

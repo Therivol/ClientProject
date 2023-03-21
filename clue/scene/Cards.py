@@ -32,7 +32,8 @@ class Cards(Scene):
 
     def enter(self):
         self.token_select = 0
-        self.tokens = ClueUtil.characters()
+        self.tokens = [Scenes.get_scene("BOARD").tokens[index] for index in Scenes.get_scene("BOARD").players]
+
 
     def awake(self):
         self.shadow = p.Surface((292, 284))
@@ -54,6 +55,8 @@ class Cards(Scene):
             if self.token_select > len(self.tokens) - 1:
                 self.token_select = 0
 
+            print(Scenes.get_scene("BOARD").player_cards[self.token_select])
+
         if self.left_button.update() or Input.get_key_down(p.K_LEFT):
             self.token_select -= 1
             if self.token_select < 0:
@@ -70,7 +73,7 @@ class Cards(Scene):
         self.view_button.draw(surf)
         self.accuse_button.draw(surf)
 
-        surf.blit(p.transform.scale(Assets.get_image(f"tokens/{self.tokens[self.token_select]}.png", True), (192, 192)),
+        surf.blit(p.transform.scale(Assets.get_image(f"tokens/{self.tokens[self.token_select].token}.png", True), (192, 192)),
                 (416, 64))
 
         return surf

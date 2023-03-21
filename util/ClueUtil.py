@@ -13,6 +13,10 @@ class ClueUtil:
         return ["STUDY", "HALL", "LOUNGE", "LIBRARY", "DINING ROOM", "BILLIARD ROOM", "CONSERVATORY", "BALLROOM",
                 "KITCHEN"]
 
+    @staticmethod
+    def cards():
+        return ClueUtil.rooms() + ClueUtil.characters() + ClueUtil.weapons()
+
     room_doors = {(6, 3): "STUDY", (9, 4): "HALL", (11, 6): "HALL", (12, 6): "HALL", (17, 5): "LOUNGE",
                   (6, 8): "LIBRARY", (3, 10): "LIBRARY", (17, 9): "DINING ROOM", (16, 12): "DINING ROOM",
                   (1, 12): "BILLIARD ROOM", (5, 15): "BILLIARD ROOM", (4, 19): "CONSERVATORY", (8, 19): "BALLROOM",
