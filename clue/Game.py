@@ -61,6 +61,7 @@ class Game:
 
     def quit(self):
         Settings.save()
+        Scenes.quit()
 
         self.should_close = True
         p.quit()

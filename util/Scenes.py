@@ -2,7 +2,6 @@ import pygame as p
 
 from util.Debug import Debug
 from util.Globals import Globals
-from clue.scene.Scene import Scene
 
 
 class Scenes:
@@ -57,3 +56,7 @@ class Scenes:
             surf = p.Surface(Globals.resolution)
             surf.fill((255, 0, 0))
             return surf
+
+    @staticmethod
+    def quit():
+        Scenes.current_scene.exit()

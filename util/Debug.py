@@ -3,7 +3,7 @@ import os
 
 
 class Debug:
-    show_logs = True
+    show_logs = False
     show_files = []
 
     @staticmethod

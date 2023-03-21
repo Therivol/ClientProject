@@ -26,7 +26,11 @@ class Guess(Scene):
 
         self.token_select = 0
         self.tokens = []
-        self.player = None
+
+        self.room = ""
+
+    def set_room(self, room):
+        self.room = room
 
     def enter(self):
         self.token_select = 0
@@ -42,8 +46,10 @@ class Guess(Scene):
             Scenes.set_scene("BOARD")
 
         if self.next_button.update() or Input.get_key_down(p.K_RETURN):
-            self.player.token = self.tokens[self.token_select]
+            print(self.tokens[self.token_select])
             Scenes.set_scene("BOARD")
+            Scenes.get_scene("BOARD").add_to_room(self.room, self.tokens[self.token_select])
+            Scenes.get_scene("BOARD").guess_button.set_disabled(True)
 
         if self.right_button.update() or Input.get_key_down(p.K_RIGHT):
             self.token_select += 1

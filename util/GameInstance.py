@@ -5,11 +5,10 @@ from clue.Player import Player
 
 class GameInstance:
     players = [None for _ in range(6)]
-    started = False
+    started = True
 
     @staticmethod
     def load_instance(board):
-        print("loading")
 
         GameInstance.started = True
         with open("assets/save/save.json", 'r') as file:
@@ -20,25 +19,34 @@ class GameInstance:
         board.moved = bool(save[3])
         board.can_guess = bool(save[4])
         board.roll_button.set_disabled(board.die_roll != 0)
+        board.players = []
+        board.tokens = []
 
         for i, hashed in enumerate(save[0]):
-            GameInstance.players[i] = None if hashed == "" else Player(hashed=hashed)
+            player = Player(hashed=hashed)
+            board.tokens.append(player)
+            if player.player:
+                try:
+                    GameInstance.players[i] = player
+                except IndexError:
+                    print(GameInstance.players, i)
+            else:
+                GameInstance.players[i] = None
 
-        board.players = [player for player in GameInstance.players if player]
+        board.players = save[5]
 
         if not board.moved:
             board.set_moves()
 
     @staticmethod
     def save_instance(board):
-        print("saving")
         players = []
 
-        for player in board.players:
-            hashed = player.hash()
+        for token in board.tokens:
+            hashed = token.hash()
             players.append(hashed)
 
-        save = [players, board.turn, board.die_roll, str(board.moved), str(board.can_guess)]
+        save = [players, board.turn, board.die_roll, str(board.moved), str(board.can_guess), board.players]
 
         with open("assets/save/save.json", 'w') as file:
             json.dump(save, file)
