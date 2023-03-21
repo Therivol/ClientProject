@@ -27,7 +27,7 @@ class Pause(Scene):
             Scenes.set_scene("BOARD")
 
         if self.info_button.update():
-            pass
+            Scenes.set_scene("CARDS")
 
         if self.quit_button.update():
             Scenes.set_scene("MENU")

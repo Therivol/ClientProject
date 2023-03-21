@@ -1,4 +1,4 @@
-
+from clue.scene.Cards import Cards
 from clue.scene.Guess import Guess
 from util.Scenes import Scenes
 
@@ -21,4 +21,5 @@ class Clue(Game):
         Scenes.add_scene(CreatePlayer())
         Scenes.add_scene(Pause())
         Scenes.add_scene(Guess())
+        Scenes.add_scene(Cards())
         Scenes.set_scene("MENU")
