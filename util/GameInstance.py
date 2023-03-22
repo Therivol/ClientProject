@@ -34,6 +34,8 @@ class GameInstance:
                 GameInstance.players[i] = None
 
         board.players = save[5]
+        board.player_cards = save[6]
+        board.accuse =
 
         if not board.moved:
             board.set_moves()
@@ -46,7 +48,8 @@ class GameInstance:
             hashed = token.hash()
             players.append(hashed)
 
-        save = [players, board.turn, board.die_roll, str(board.moved), str(board.can_guess), board.players]
+        save = [players, board.turn, board.die_roll, str(board.moved), str(True), board.players,
+                board.player_cards]
 
         with open("assets/save/save.json", 'w') as file:
             json.dump(save, file)
