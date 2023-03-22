@@ -36,8 +36,8 @@ class Board(Scene):
         self.roll_button = Button(p.Rect(800, 352, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174),
                                   disable_color=(0, 0, 0))
         self.guess_button = Button(p.Rect(800, 480, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
-        self.options_button = Button(p.Rect(800, 576, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
-        self.end_button = Button(p.Rect(800, 704, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
+        self.end_button = Button(p.Rect(800, 576, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
+        self.options_button = Button(p.Rect(800, 704, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
 
         self.available_moves = []
 
@@ -53,6 +53,7 @@ class Board(Scene):
 
     def start_board(self):
         self.tokens = []
+        self.accuse = []
 
         player_tokens = {player.token: player for player in GameInstance.players if player}
         for token in ClueUtil.characters():
@@ -67,17 +68,16 @@ class Board(Scene):
         self.accuse.append(ClueUtil.characters()[random.randint(0, 5)])
         self.accuse.append(ClueUtil.rooms()[random.randint(0, 8)])
 
-        self.player_cards = {index: [] for index in self.players}
+        self.player_cards = {str(index): [] for index in self.players}
 
         cards = ClueUtil.cards()
         random.shuffle(cards)
         player_counter = 0
+
         for card in cards:
             if card not in self.accuse:
-                self.player_cards[self.players[player_counter]].append(card)
+                self.player_cards[str(self.players[player_counter])].append(card)
                 player_counter = (player_counter + 1) % len(self.players)
-
-        print(self.accuse, self.player_cards)
 
         self.turn = 0
         self.die_roll = 0
@@ -170,7 +170,7 @@ class Board(Scene):
         if self.roll_button.update():
             self.roll_die()
 
-        if  self.guess_button.update() and self.tokens[self.players[self.turn]].room != "":
+        if self.guess_button.update() and self.tokens[self.players[self.turn]].room != "":
             Scenes.get_scene("GUESS").set_room(self.tokens[self.players[self.turn]].room)
             Scenes.set_scene("GUESS")
 
@@ -218,7 +218,6 @@ class Board(Scene):
             if token.token == character:
                 to_add = token
 
-        print(to_add)
         to_add.set_room(room)
 
         other_positions = [token.location for token in self.tokens]
@@ -253,9 +252,24 @@ class Board(Scene):
         surf.blit(Assets.get_image(f"dice/{self.die_roll}.png"), (832, 192))
 
         self.roll_button.draw(surf)
+        text = Assets.font_1.render("Roll Die", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.roll_button.rect.size, (0.5, 0.5),
+                                                    base=self.roll_button.rect.topleft)))
+
         self.guess_button.draw(surf)
+        text = Assets.font_1.render("Make Guess", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.guess_button.rect.size, (0.5, 0.5),
+                                                    base=self.guess_button.rect.topleft)))
+
         self.options_button.draw(surf)
+        text = Assets.font_1.render("Options", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.options_button.rect.size, (0.5, 0.5),
+                                                    base=self.options_button.rect.topleft)))
+
         self.end_button.draw(surf)
+        text = Assets.font_1.render("End Turn", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.end_button.rect.size, (0.5, 0.5),
+                                                    base=self.end_button.rect.topleft)))
 
     def draw_board(self, surf):
         surf.blit(Assets.get_image("board/board.png"), (0, 0))

@@ -1,7 +1,4 @@
-import json
-
 from util.Assets import Assets
-from util.GameInstance import GameInstance
 from util.Globals import Globals
 from util.Scenes import Scenes
 from clue.scene.Scene import Scene
@@ -46,7 +43,18 @@ class Menu(Scene):
         surf.blit(img, Assets.position_by_percent(img.get_size(), Globals.resolution, (0.5, 0.2)))
 
         self.new_button.draw(surf)
+        text = Assets.font_1.render("New Game", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.new_button.rect.size, (0.5, 0.5),
+                                                    base=self.new_button.rect.topleft)))
+
         self.resume_button.draw(surf)
+        text = Assets.font_1.render("Resume", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.resume_button.rect.size, (0.5, 0.5),
+                                                    base=self.resume_button.rect.topleft)))
+
         self.quit_button.draw(surf)
+        text = Assets.font_1.render("Quit", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.quit_button.rect.size, (0.5, 0.5),
+                                                    base=self.quit_button.rect.topleft)))
 
         return surf

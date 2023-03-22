@@ -1,9 +1,7 @@
 import pygame as p
 
-from clue.Player import Player
 from clue.scene.Scene import Scene
 from gui.element.Button import Button
-from gui.element.Select import Select
 from util.Assets import Assets
 from util.ClueUtil import ClueUtil
 from util.Globals import Globals
@@ -14,8 +12,6 @@ from util.Scenes import Scenes
 class Guess(Scene):
     def __init__(self):
         super().__init__("GUESS")
-
-        self.shadow = None
 
         self.back_button = Button(p.Rect(64, 672, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174))
         self.next_button = Button(p.Rect(768, 672, 192, 64), (64, 43, 29), (89, 66, 41), idle_border=(174, 174, 174),
@@ -36,20 +32,13 @@ class Guess(Scene):
         self.token_select = 0
         self.tokens = ClueUtil.characters()
 
-    def awake(self):
-        self.shadow = p.Surface((292, 284))
-        self.shadow.fill((0, 0, 0))
-        self.shadow.set_alpha(150)
-
     def update(self):
         if Input.get_key_down(p.K_ESCAPE) or self.back_button.update():
             Scenes.set_scene("BOARD")
 
         if self.next_button.update() or Input.get_key_down(p.K_RETURN):
-            print(self.tokens[self.token_select])
             Scenes.set_scene("BOARD")
             Scenes.get_scene("BOARD").add_to_room(self.room, self.tokens[self.token_select])
-            Scenes.get_scene("BOARD").guess_button.set_disabled(True)
 
         if self.right_button.update() or Input.get_key_down(p.K_RIGHT):
             self.token_select += 1
@@ -68,11 +57,24 @@ class Guess(Scene):
         surf.blit(Assets.get_image("ui/background.png"), (0, 0))
 
         self.back_button.draw(surf)
+        text = Assets.font_1.render("Back", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.back_button.rect.size, (0.5, 0.5),
+                                                    base=self.back_button.rect.topleft)))
 
         self.next_button.draw(surf)
+        text = Assets.font_1.render("Confirm", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.next_button.rect.size, (0.5, 0.5),
+                                                    base=self.next_button.rect.topleft)))
 
         self.left_button.draw(surf)
+        text = Assets.font_1.render("<", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.left_button.rect.size, (0.5, 0.5),
+                                                    base=self.left_button.rect.topleft)))
+
         self.right_button.draw(surf)
+        text = Assets.font_1.render(">", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.right_button.rect.size, (0.5, 0.5),
+                                                    base=self.right_button.rect.topleft)))
 
         surf.blit(p.transform.scale(Assets.get_image(f"tokens/{self.tokens[self.token_select]}.png", True), (192, 192)),
                 (416, 128))

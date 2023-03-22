@@ -1,7 +1,6 @@
 import pygame as p
 from gui.element.UIElement import UIElement
 from util.Input import Input
-from util.Assets import Assets
 
 
 class Select(UIElement):

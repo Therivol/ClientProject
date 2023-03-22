@@ -3,8 +3,11 @@ import pygame as p
 
 class Assets:
 
+    p.font.init()
+
     images = {}
     working_directory = "assets/"
+    font_1 = p.font.SysFont("Times New Roman", 24)
 
     @staticmethod
     def get_image(path, alpha=False):
@@ -30,8 +33,7 @@ class Assets:
         Assets.working_directory = path
 
     @staticmethod
-    def position_by_percent(size, back_size, percent, center=True):
-        x, y = 0, 0
+    def position_by_percent(size, back_size, percent, center=True, base=(0, 0)):
 
         if center:
             x = back_size[0] * percent[0] - size[0] / 2
@@ -41,4 +43,4 @@ class Assets:
             x = back_size[0] * percent[0]
             y = back_size[1] * percent[1]
 
-        return x, y
+        return x + base[0], y + base[1]

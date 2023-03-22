@@ -1,5 +1,3 @@
-import asyncio
-
 from clue.Clue import Clue
 
 

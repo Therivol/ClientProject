@@ -1,5 +1,4 @@
 import pygame as p
-import sys
 
 from util.Scenes import Scenes
 from util.Globals import Globals
@@ -7,7 +6,6 @@ from util.Settings import Settings
 
 
 class Window:
-
     should_close = False
     display = None
     view = None
@@ -53,4 +51,4 @@ class Window:
             Window.view = p.Surface((size[1] * aspect, size[1]))
 
         Window.view_destination = (Window.display.get_width() / 2 - Window.view.get_width() / 2,
-                                 Window.display.get_height() / 2 - Window.view.get_height() / 2)
+                                   Window.display.get_height() / 2 - Window.view.get_height() / 2)

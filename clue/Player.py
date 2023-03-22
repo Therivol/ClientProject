@@ -1,7 +1,5 @@
 import pygame as p
 
-from pygame.math import Vector2
-
 
 class Player:
     def __init__(self, name="", location=(0, 0), token="MISS SCARLET", room="", player=True, hashed=None):
@@ -23,8 +21,8 @@ class Player:
     def hash(self):
         return f"{self.player}~{self.token}~{self.name}~{self.location.x}~{self.location.y}~{self.room}"
 
-    def load_hash(self, hash):
-        values = hash.split('~')
+    def load_hash(self, hashed):
+        values = hashed.split('~')
         self.player = values[0]
         self.token = values[1]
         self.name = values[2]

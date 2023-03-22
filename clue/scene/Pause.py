@@ -1,7 +1,4 @@
-import json
-
 from util.Assets import Assets
-from util.GameInstance import GameInstance
 from util.Globals import Globals
 from util.Input import Input
 from util.Scenes import Scenes
@@ -10,9 +7,6 @@ from clue.scene.Scene import Scene
 from gui.element.Button import Button
 
 import pygame as p
-
-from util.Window import Window
-
 
 class Pause(Scene):
     def __init__(self):
@@ -37,7 +31,18 @@ class Pause(Scene):
         surf.blit(Assets.get_image("ui/background.png"), (0, 0))
 
         self.resume_button.draw(surf)
+        text = Assets.font_1.render("Resume", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.resume_button.rect.size, (0.5, 0.5),
+                                                    base=self.resume_button.rect.topleft)))
+
         self.info_button.draw(surf)
+        text = Assets.font_1.render("View Cards", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.info_button.rect.size, (0.5, 0.5),
+                                                    base=self.info_button.rect.topleft)))
+
         self.quit_button.draw(surf)
+        text = Assets.font_1.render("Menu", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.quit_button.rect.size, (0.5, 0.5),
+                                                    base=self.quit_button.rect.topleft)))
 
         return surf

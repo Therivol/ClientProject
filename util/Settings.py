@@ -1,7 +1,5 @@
 import json
 
-from util.GameInstance import GameInstance
-
 
 class Settings:
     file_path = "assets/settings/general.json"

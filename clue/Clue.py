@@ -2,6 +2,7 @@ import pygame as p
 
 from clue.scene.Cards import Cards
 from clue.scene.Guess import Guess
+from clue.scene.View import View
 from util.Assets import Assets
 from util.Scenes import Scenes
 
@@ -25,6 +26,7 @@ class Clue(Game):
         Scenes.add_scene(Pause())
         Scenes.add_scene(Guess())
         Scenes.add_scene(Cards())
+        Scenes.add_scene(View())
         Scenes.set_scene("MENU")
 
         p.display.set_icon(Assets.get_image("dice/1.png"))

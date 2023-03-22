@@ -3,7 +3,6 @@ import pygame as p
 from clue.Player import Player
 from clue.scene.Scene import Scene
 from gui.element.Button import Button
-from gui.element.Select import Select
 from util.Assets import Assets
 from util.ClueUtil import ClueUtil
 from util.Globals import Globals
@@ -71,11 +70,24 @@ class CreatePlayer(Scene):
         surf.blit(Assets.get_image("ui/background.png"), (0, 0))
 
         self.back_button.draw(surf)
+        text = Assets.font_1.render("Back", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.back_button.rect.size, (0.5, 0.5),
+                                                    base=self.back_button.rect.topleft)))
 
         self.next_button.draw(surf)
+        text = Assets.font_1.render("Confirm", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.next_button.rect.size, (0.5, 0.5),
+                                                    base=self.next_button.rect.topleft)))
 
         self.left_button.draw(surf)
+        text = Assets.font_1.render("<", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.left_button.rect.size, (0.5, 0.5),
+                                                    base=self.left_button.rect.topleft)))
+
         self.right_button.draw(surf)
+        text = Assets.font_1.render(">", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.right_button.rect.size, (0.5, 0.5),
+                                                    base=self.right_button.rect.topleft)))
 
         surf.blit(p.transform.scale(Assets.get_image(f"tokens/{self.tokens[self.token_select]}.png", True), (192, 192)),
                 (416, 128))

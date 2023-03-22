@@ -121,10 +121,19 @@ class AddPlayers(Scene):
 
         if self.selected >= 0:
             self.remove_button.draw(surf)
+            text = Assets.font_1.render("Remove", True, (255, 255, 255))
+            surf.blit(text, (Assets.position_by_percent(text.get_size(), self.remove_button.rect.size, (0.5, 0.5),
+                                                        base=self.remove_button.rect.topleft)))
 
         if self.num_players() >= 3:
             self.next_button.draw(surf)
+            text = Assets.font_1.render("Next", True, (255, 255, 255))
+            surf.blit(text, (Assets.position_by_percent(text.get_size(), self.next_button.rect.size, (0.5, 0.5),
+                                                        base=self.next_button.rect.topleft)))
 
         self.back_button.draw(surf)
+        text = Assets.font_1.render("Back", True, (255, 255, 255))
+        surf.blit(text, (Assets.position_by_percent(text.get_size(), self.back_button.rect.size, (0.5, 0.5),
+                                                    base=self.back_button.rect.topleft)))
 
         return surf

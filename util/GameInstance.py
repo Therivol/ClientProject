@@ -1,6 +1,7 @@
 import json
 
 from clue.Player import Player
+from util.ClueUtil import ClueUtil
 
 
 class GameInstance:
@@ -21,6 +22,7 @@ class GameInstance:
         board.roll_button.set_disabled(board.die_roll != 0)
         board.players = []
         board.tokens = []
+        board.accuse = []
 
         for i, hashed in enumerate(save[0]):
             player = Player(hashed=hashed)
@@ -35,7 +37,9 @@ class GameInstance:
 
         board.players = save[5]
         board.player_cards = save[6]
-        board.accuse =
+
+        player_cards = sum(save[6].values(), [])
+        board.accuse = [card for card in ClueUtil.cards() if card not in player_cards]
 
         if not board.moved:
             board.set_moves()
